@@ -14,7 +14,6 @@ const KT_token = "KT1GxBkvP5aiAtBu9MwAWBgxRpaCeLCcBfNj"
 const shortenAddress = addr =>
   addr.slice(0, 6) + "..." + addr.slice(addr.length - 6);
 
-  
 const App = () => {
   const [tokenInstance, setTokenInstance] = useState(undefined);
   const [xtzPrice, setXtzPrice] = useState(undefined);
@@ -30,11 +29,10 @@ const App = () => {
   const initWallet = async () => {
     try {
       /*............remove...........*/
-      //const fetch = require('node-fetch') 
-      //const req = await fetch("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD")
-      //const response = await req.json()               
-      //const _xtz = Number(response[0])
-      //setXtzPrice(_xtz);
+      const req = await fetch("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD")
+      const response = await req.json()               
+      const _xtz = Number(response[0])
+      setXtzPrice(_xtz);
       /*.............remove..........*/
       //const response = await r2("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD").json;
       //const _xtz = Number(response[0])
@@ -72,21 +70,11 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-
-      const fetch = require('node-fetch') 
-      const req = await fetch('https://www.google.com')
-      const response = await req.json()               
-      const _xtz = Number(response[0])
-      setXtzPrice(_xtz);
-
       // sets RPC
       Tezos.setProvider({
         rpc: "https://tezos-dev.cryptonomic-infra.tech",
         signer: new TezBridgeSigner()
       });
-
-
-
       const tokenContract = await Tezos.contract.at(KT_token);
       setTokenInstance(tokenContract);
       const ledgerContract = await Tezos.contract.at(KT_ledger);

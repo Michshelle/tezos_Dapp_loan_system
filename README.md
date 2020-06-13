@@ -21,7 +21,7 @@ Spare the coarse design of the webpage as I know too little about frontend espec
 # Project Reference
 The project is largely based on below materials.  A lot more references have been used, however I cannot recall all of them accurately.
 
-Thanks to the folks on tezos.stackexchange.com, ligolang discorder and the GOOGLE, of course.
+Thanks to the folks on tezos.stackexchange.com and ligolang discorder, and to the GOOGLE, of course.
 
 1. https://hackernoon.com/build-your-first-dapp-on-tezos-rwgl3ymb
 2. https://github.com/ecadlabs/token-contract-example
