@@ -1,3 +1,9 @@
+# Purpose of the app
+
+The dapp aims to issue short-term debt on chain with each token pegged to 10^-6 dollar and treat the xtz as the media for value exchange between usd and the debt token.
+
+Please take a look at the spec on Flexible Loan System to know more details.
+
 # Deployment 
 
 Tools: ide.ligolang.org + tezbridge
@@ -16,6 +22,11 @@ Three functions have been built and put on the frontend for showcase.
 "Debt ownership transfer" and "debt token withdrawal" have been released to the public users;  "Token mint function" can be used when the token owner account is being connected to the tezbridge.
 
 Spare the coarse design of the webpage as I know too little about frontend especially javescript and react.  Basically I'm mimicing the code mentioned in the reference section.
+
+# Limitations for the built part
+
+1. Lots of errors and warnings under the hood cannot be addressed enough. If you are trying to run the app yourself, please open the browser dev console to make sure the process.
+2. CORS policy needs to be overriden when making localhost test, here I would recommend chrome extension adds-on for temporary bypass. An alternative is to use a proxy to fetch value.
 
 
 # Project Reference
