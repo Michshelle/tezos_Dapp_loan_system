@@ -6,6 +6,8 @@ import "./App.css";
 import "./bulma.css";
 
 
+
+
 /* PUT HERE THE CONTRACT ADDRESS FOR YOUR OWN SANDBOX! */
 const KT_ledger = "KT1RigSYegqvkCkEoHMfgXY4XLgknZufrFEa"
 const KT_token = "KT1GxBkvP5aiAtBu9MwAWBgxRpaCeLCcBfNj"
@@ -25,14 +27,22 @@ const App = () => {
   const [contractBalance, setContractBalance] = useState(0);
   const tezbridge = window.tezbridge;
 
+  const tezosPrice = async() => {
+    try {
+      const fetch = require('node-fetch') 
+      const req = await fetch("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD", { headers : { 'Access-Control-Allow-Origin': '*' }})
+      const response = await req.json()               
+      const _xtz = Number(response[0])
+      setXtzPrice(_xtz);
+    } catch (error) {
+      console.log("error fetching the address or balance:", error);
+    }
+  };
+
 
   const initWallet = async () => {
     try {
       /*............remove...........*/
-      const req = await fetch("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD")
-      const response = await req.json()               
-      const _xtz = Number(response[0])
-      setXtzPrice(_xtz);
       /*.............remove..........*/
       //const response = await r2("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD").json;
       //const _xtz = Number(response[0])
@@ -118,7 +128,7 @@ const App = () => {
                   <button
                     className="button is-warning is-light is-small"
                     onClick={async () => {
-                     const xtzPrice = 2;
+                     await tezosPrice();
                      mint(document.getElementById("tokenNumber").value,xtzPrice);
                      document.getElementById("tokenNumber").value = "";
                     }
