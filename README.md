@@ -2,11 +2,11 @@
 
 The dapp aims to issue short-term debt on chain with each token pegged to 10^-6 dollar and treat the xtz as the media for value exchange between usd and the debt token.
 
-Please take a look at the spec on Flexible Loan System to know more details.
+To know more details, please take a look at the spec on Flexible Loan System.
 
 # Deployment 
 
-Tools: ide.ligolang.org + tezbridge
+Tools: ide.ligolang.org + tezbridge + crontab
 
 A few steps of manual work are required.
 1. Deploy the token contract and copy the contract address when it is done
