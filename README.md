@@ -17,6 +17,8 @@ After we have the three contracts on chain, the deployment part is done;
 
 # Webpage Usage
 
+To boot the webpage: `cd client` and run `npm run start`. 
+
 Three functions have been built and put on the frontend for showcase.
 
 "Debt ownership transfer" and "debt token withdrawal" have been released to the public users;  "Token mint function" can be used when the token owner account is being connected to the tezbridge.
