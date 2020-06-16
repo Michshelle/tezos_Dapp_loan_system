@@ -114,19 +114,14 @@ function mint (const value : nat ; var s : contract_storage) : contract_storage 
 function burn (const settlement : string ; const amounts : tez ; var s : contract_storage) : list(operation) * contract_storage is
  begin
   const ops : list(operation) = list [];
-  var ownerAccount: account := record 
-      balance = 0n;
-      allowances = (map end : map(address, nat));
-  end;
+  const senderBalance : nat = 0n;
   // If the sender is not in the ledger list, it fails
   case s.ledger[Tezos.sender] of 
   | None -> failwith ("Your address must be listed")
-  | Some(n) ->  ownerAccount := n
+  | Some(n) ->  senderBalance := n.balance
   end;
-  s.totalSupply := abs(s.totalSupply - ownerAccount.balance);
+  s.totalSupply := abs(s.totalSupply - senderBalance);
   s.ledger := Big_map.remove (Tezos.sender, s.ledger); 
-
-
   if settlement = "XTZ" then
   {
     const execontract : contract (unit) =

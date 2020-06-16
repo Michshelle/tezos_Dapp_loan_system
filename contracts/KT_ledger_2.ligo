@@ -33,7 +33,7 @@ const removing_list : list(address) = list [];
 const ownerAddress : address =
   ("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address);
 const exectAddress : address =
-  ("KT1DTkUSfwVJo2y3CbaYbM3oCqzX7w3AQUfB" : address);
+  ("KT1GHbQTMbFHrTjyBH3G2W3aCuEoxVMgKpvc" : address);
 
 type parameter is
 | Transfer of (address * address * nat)
