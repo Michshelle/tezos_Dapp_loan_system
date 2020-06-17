@@ -33,7 +33,7 @@ const removing_list : list(address) = list [];
 const ownerAddress : address =
   ("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address);
 const exectAddress : address =
-  ("KT1GHbQTMbFHrTjyBH3G2W3aCuEoxVMgKpvc" : address);
+  ("KT1K9UbyNBtjBaoz5vERevagiCXG6qgtaRRy" : address);
 
 type parameter is
 | Transfer of (address * address * nat)
@@ -57,7 +57,8 @@ function proxy_transfer (const store : mapforapproval): list(operation) is
   } with (ops)
 
 
-function fold_proxyissue (var m : map (address , counter)) : list(operation) is block {
+function fold_proxyissue (var m : map (address , counter)) : list(operation) is 
+block {
   const iii : list(operation) = nil;
   for key -> value in map m block {
       if value.maturityTime <= Tezos.now then 

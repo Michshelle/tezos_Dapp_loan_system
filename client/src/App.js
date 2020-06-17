@@ -9,8 +9,8 @@ import "./bulma.css";
 
 
 /* PUT HERE THE CONTRACT ADDRESS FOR YOUR OWN SANDBOX! */
-const KT_ledger = "KT1RigSYegqvkCkEoHMfgXY4XLgknZufrFEa"
-const KT_token = "KT1GxBkvP5aiAtBu9MwAWBgxRpaCeLCcBfNj"
+const KT_ledger = "KT1WFCgwvmBb6ANYPaFgx3PDS2qC9U8VBF2a"  //some of the QC rules have been removed;
+const KT_token = "KT1K9UbyNBtjBaoz5vERevagiCXG6qgtaRRy"
 
 
 const shortenAddress = addr =>
@@ -29,7 +29,6 @@ const App = () => {
 
   const tezosPrice = async() => {
     try {
-      const fetch = require('node-fetch') 
       const req = await fetch("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD", { headers : { 'Access-Control-Allow-Origin': '*' }})
       const response = await req.json()               
       const _xtz = Number(response[0])
@@ -39,14 +38,8 @@ const App = () => {
     }
   };
 
-
   const initWallet = async () => {
     try {
-      /*............remove...........*/
-      /*.............remove..........*/
-      //const response = await r2("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD").json;
-      //const _xtz = Number(response[0])
-      //setXtzPrice(_xtz);
       const _address = await tezbridge.request({ method: "get_source" });
       setUserAddress(_address);
       // gets user's balance
@@ -95,6 +88,7 @@ const App = () => {
       setLedgerInfo(ledgerInfos);
     })();
   }, []);
+
   return (
     <div className="App">
       <div className="wallet">

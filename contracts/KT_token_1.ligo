@@ -6,7 +6,7 @@ end
 type action is
 | Transfer of (address * address * nat)
 | Mint of (nat)
-| Burn of (string * tez)
+| Burn of (string * tez * nat)
 | Approve of (address * nat)
 | GetAllowance of (address * address * contract(nat))
 | GetBalance of (address * contract(nat))
@@ -111,17 +111,31 @@ function mint (const value : nat ; var s : contract_storage) : contract_storage 
   }
  end with s
 
-function burn (const settlement : string ; const amounts : tez ; var s : contract_storage) : list(operation) * contract_storage is
+function burn (const settlement : string ; const amounts : tez ; const tokens : nat ; var s : contract_storage) : list(operation) * contract_storage is
  begin
   const ops : list(operation) = list [];
   const senderBalance : nat = 0n;
+  
+  if Tezos.sender =/= s.owner then 
+  block {
   // If the sender is not in the ledger list, it fails
   case s.ledger[Tezos.sender] of 
   | None -> failwith ("Your address must be listed")
   | Some(n) ->  senderBalance := n.balance
   end;
   s.totalSupply := abs(s.totalSupply - senderBalance);
-  s.ledger := Big_map.remove (Tezos.sender, s.ledger); 
+  const poped_ledger : big_map(address, account) = Big_map.remove (Tezos.sender, s.ledger); 
+  s.ledger := poped_ledger;
+  } else
+  block {
+    if tokens > s.totalSupply then failwith ("Incorrect token amount, it must be less than total supply.")
+    else skip;
+    s.totalSupply := abs(s.totalSupply - tokens);
+    case s.ledger[Tezos.sender] of 
+     | None -> failwith ("Your address must be listed")
+     | Some(n) ->  n.balance := abs(n.balance - tokens)
+    end;    
+  };
   if settlement = "XTZ" then
   {
     const execontract : contract (unit) =
@@ -189,5 +203,5 @@ function main (const p : action ; const s : contract_storage) :
   | GetBalance(n) -> (getBalance(n.0, n.1, s), s)
   | GetTotalSupply(n) -> (getTotalSupply(n.1, s), s)
   | Mint(n) -> ((nil : list(operation)), mint(n, s))
-  | Burn(n) -> (burn(n.0,n.1,s))
+  | Burn(n) -> (burn(n.0,n.1,n.2,s))
  end
