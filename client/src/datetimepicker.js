@@ -6,27 +6,19 @@ class MyApp extends Component {
   constructor (props) {
     super(props);
     this.state = {
-        value: null
+        value: new Date()
     };
-    this.setValue = this.setValue.bind(this);
   }
 
-  setValue (value) {
-    this.setState({ value }, () => this.props.setValue(value));
-  }
-
-  state = {
-    date: new Date(),
-  }
-  onChange = date => this.setState({ date })
- 
   render() {
     return (
       <div>
         <DateTimePicker
-          onChange={this.onChange}
-          value={this.state.date}
-          setValue={this.state.date}
+          onChange={date=>{ 
+              this.setState({value: date});
+              this.props.onDateChange(date);
+          }}
+          value={this.state.value}
         />
       </div>
     );

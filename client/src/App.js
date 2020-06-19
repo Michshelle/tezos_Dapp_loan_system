@@ -24,7 +24,7 @@ const App = () => {
   const [userAddress, setUserAddress] = useState(undefined);
   const [balance, setBalance] = useState(undefined);
   const [isOwner, setIsOwner] = useState(false);
-  const [contractBalance, setContractBalance] = useState(0);
+  //const [contractBalance, setContractBalance] = useState(0);
   const tezbridge = window.tezbridge;
 
   const tezosPrice = async() => {
@@ -34,7 +34,7 @@ const App = () => {
       const _xtz = Number(response[0])
       setXtzPrice(_xtz);
     } catch (error) {
-      console.log("error fetching the address or balance:", error);
+      console.log("error fetching xtz price:", error);
     }
   };
 
@@ -48,8 +48,8 @@ const App = () => {
       const storage = await tokenInstance.storage();
       if (storage.owner === _address) {
         setIsOwner(true);
-        const _contractBalance = await Tezos.tz.getBalance(KT_token);
-        setContractBalance(_contractBalance.c[0]);
+      //  const _contractBalance = await Tezos.tz.getBalance(KT_token);
+      //  setContractBalance(_contractBalance.c[0]);
       }
     } catch (error) {
       console.log("error fetching the address or balance:", error);

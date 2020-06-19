@@ -43,6 +43,10 @@
   transition: 0.2s;
 }
 
+.actioned {
+  background-color: bisque;
+}
+
 .action:hover {
   font-weight: bold;
 }

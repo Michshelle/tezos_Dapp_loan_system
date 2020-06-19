@@ -20,17 +20,22 @@
 //
 //console.log(xtz_price());
 
-const fetch = require('node-fetch') 
-const url = 'https://api-pub.bitfinex.com/v2/'
-
+//const url = 'https://api-pub.bitfinex.com/v2/'
+const url = 'http://localhost:3001/v2'
 const pathParams = 'ticker/tXTZUSD' // Change these based on relevant path params
 const queryParams = '' // Change these based on relevant query params
 
 async function request() {
    try {
+       
+       const fetch = require('node-fetch') 
        const req = await fetch(`${url}/${pathParams}?${queryParams}`)
        const response = await req.json()
-       console.log(response[0])
+       let v = response[0]
+       console.log(v)
+       return v
+
+       
    }
    catch (err) {
        console.log(err)
@@ -38,3 +43,4 @@ async function request() {
 }
 
 request()
+

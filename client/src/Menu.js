@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import MyApp from "./datetimepicker";
+import moment from "moment";
 
 
 const shortenAddress = addr =>
   addr.slice(0, 6) + "..." + addr.slice(addr.length - 6);
 
-const mutezToTez = mutez =>
-  Math.round((parseInt(mutez) / 1000000 + Number.EPSILON) * 100) / 100;
+//const mutezToTez = mutez =>
+//  Math.round((parseInt(mutez) / 1000000 + Number.EPSILON) * 100) / 100;
 
 const Menu = ({
   tokenInstance,
@@ -18,10 +19,22 @@ const Menu = ({
 }) => {
 
   const [burnBalance, setBurnBalance] = useState(undefined);
-  const debtTokenTransfer = async (new_owner,start_date,paybackAmount) => {
+  const [myAppDate, setMyAppDate] = useState(new Date());
+
+  const debtTokenTransfer = async (new_owner,start_date) => {
     try {
+      const ledgerStorage = await ledgerInstance.storage()
+      const interestRate = ledgerStorage.couponRate_inPerc
+      const userLedger = await ledgerStorage.creditorsMap.get(userAddress)
+      const start_date_timestamp = Date.parse(start_date) / 1000
+      const creditCapital = userLedger.creditAmount
+      const initialTime_timestamp = Date.parse(moment(userLedger.initialTime)) / 1000
+      const day_diff = Math.floor((start_date_timestamp - initialTime_timestamp) / 86400)
+      const start_date_timestamp_inmil = moment(start_date_timestamp * 1000)
+
+      const paybackAmount = creditCapital * ( 1 + interestRate / 1000000) ** day_diff - creditCapital
       const op = await ledgerInstance.methods
-        .modifyOwnership(new_owner, start_date, paybackAmount)
+        .modifyOwnership(new_owner, start_date_timestamp_inmil, paybackAmount)
         .send({ amount: 3000000, mutez: true });
       await op.confirmation(30);
       if (op.includedInBlock !== Infinity) {
@@ -66,11 +79,8 @@ const Menu = ({
   };
   return (
     <>
-        setValue(value) {
-            this.setState(value)
-        }
         <div className="app-subtitle">Choose the action you want to perform:</div>
-          <p>USD{ ledgerInfo[1] /10000} has been raised for the debt account { shortenAddress(ledgerInfo[0]) }.</p>
+          <p>USD{ ledgerInfo[1] /10000 } has been raised for the debt account { shortenAddress(ledgerInfo[0]) }.</p>
             <div className="card coffee_selection" key={userAddress}>
               <div className="card-footer">
                 <div className="card-footer-item">
@@ -99,17 +109,15 @@ const Menu = ({
                   </div>
                   <div className="card-padding-line">
                    <input type="text" id="newCreditorAccount" ></input>
-                   </div>
+                  </div>
 
                   <div>
-                  <MyApp setValue={this.setValue} value={this.state.value} />
+                  <MyApp onDateChange={(date)=>{setMyAppDate(date)}} />
                   </div>
                   <span
                     className="action"
-                    onClick={ () => {
-                      alert(MyApp.value);
-                      const paybackAmount = 0;
-                      debtTokenTransfer(userAddress,document.getElementById("newCreditorAccount").value, paybackAmount)
+                    onClick={async () => {
+                      await debtTokenTransfer(document.getElementById("newCreditorAccount").value,myAppDate)
                       }
                     }
                   >
