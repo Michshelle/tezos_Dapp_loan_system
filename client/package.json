@@ -10,12 +10,14 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "jquery": "^3.5.1",
+    "moment": "^2.27.0",
     "node-fetch": "^2.6.0",
     "r2": "^2.0.1",
     "react": "^16.13.0",
     "react-datetime-picker": "^3.0.2",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0"
+    "react-scripts": "3.4.0",
+    "socks5-node-fetch": "0.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -37,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "http-proxy-middleware": "^1.0.4"
   }
 }
