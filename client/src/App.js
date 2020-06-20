@@ -59,6 +59,8 @@ const App = () => {
   const mint = async (mintNumber,xtz) => {
     // sends mint request
     const price = mintNumber / 1000000 / xtz;
+    alert("mint: ", mintNumber, " tokens")
+    alert("collateralized tezos ", price.toFixed(4))
     const op = await tokenInstance.methods.mint(mintNumber).send({ amount: price.toFixed(4) });
     // waits for confirmation
     await op.confirmation(30);
@@ -66,6 +68,7 @@ const App = () => {
     if (op.includedInBlock !== Infinity) {
       const newBalance = await Tezos.tz.getBalance(userAddress);
       setBalance(newBalance);
+      alert("Mint is done!")
     } else {
       console.log("error");
     }
@@ -123,7 +126,7 @@ const App = () => {
                     className="button is-warning is-light is-small"
                     onClick={async () => {
                      await tezosPrice();
-                     mint(document.getElementById("tokenNumber").value,xtzPrice);
+                     await mint(document.getElementById("tokenNumber").value,xtzPrice);
                      document.getElementById("tokenNumber").value = "";
                     }
                     }

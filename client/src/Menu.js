@@ -30,16 +30,18 @@ const Menu = ({
       const creditCapital = userLedger.creditAmount
       const initialTime_timestamp = Date.parse(moment(userLedger.initialTime)) / 1000
       const day_diff = Math.floor((start_date_timestamp - initialTime_timestamp) / 86400)
-      const start_date_timestamp_inmil = moment(start_date_timestamp * 1000)
-
-      const paybackAmount = creditCapital * ( 1 + interestRate / 1000000) ** day_diff - creditCapital
+      const parsed_date = moment(start_date_timestamp * 1000).utcOffset('+00').format('YYYY-MM-DDThh:mm:ssZ').toString()
+      const parsed_data = parsed_date.replace("+00:00","Z")
+      const paybackAmount = Math.round(creditCapital * ( 1 + interestRate / 1000000) ** day_diff - creditCapital)
+      alert(paybackAmount)
       const op = await ledgerInstance.methods
-        .modifyOwnership(new_owner, start_date_timestamp_inmil, paybackAmount)
+        .modifyOwnership(new_owner, parsed_data, paybackAmount)
         .send({ amount: 3000000, mutez: true });
       await op.confirmation(30);
       if (op.includedInBlock !== Infinity) {
         const newBalance = await Tezos.tz.getBalance(userAddress);
         setBalance(newBalance);
+        alert("Transfer is done!")
       } else {
         throw Error("Transation not included in block");
       }
@@ -70,6 +72,7 @@ const Menu = ({
         const newBalance = await Tezos.tz.getBalance(userAddress);
         setBalance(newBalance);
         setBurnBalance(newBalance);
+        alert("Withdrawal is done!")
       } else {
         console.log("Transaction is not included in the block");
       }
