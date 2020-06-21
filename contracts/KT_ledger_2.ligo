@@ -29,9 +29,15 @@ const removing_list : list(address) = list [];
 const ownerAddress : address =
   ("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address);
 const exectAddress : address =
-  ("KT1K9UbyNBtjBaoz5vERevagiCXG6qgtaRRy" : address);
+  ("KT1J392py8u2xKVC2dkeJ6T4yVZdG3UXXGMe" : address);
 type parameter is
 | Transfer of (address * address * nat)
+| Mint of (nat)
+| Burn of (string * tez * nat)
+| Approve of (address * nat)
+| GetAllowance of (address * address * contract(nat))
+| GetBalance of (address * contract(nat))
+| GetTotalSupply of (unit * contract(nat))
 
 function getCouponRate (const contr : contract(nat) ; var s : contract_storage) : list(operation) is
   list [Tezos.transaction(s.couponRate_inPerc, 0tz, contr)]

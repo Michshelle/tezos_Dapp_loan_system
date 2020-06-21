@@ -9,8 +9,8 @@ import "./bulma.css";
 
 
 /* PUT HERE THE CONTRACT ADDRESS FOR YOUR OWN SANDBOX! */
-const KT_ledger = "KT1WFCgwvmBb6ANYPaFgx3PDS2qC9U8VBF2a"  //some of the QC rules have been removed;
-const KT_token = "KT1K9UbyNBtjBaoz5vERevagiCXG6qgtaRRy"
+const KT_ledger = "KT19kz19131X3D38js91b1pxJWqhmApyFnv5"  //some of the QC rules have been removed;
+const KT_token = "KT1J392py8u2xKVC2dkeJ6T4yVZdG3UXXGMe"
 
 
 const shortenAddress = addr =>

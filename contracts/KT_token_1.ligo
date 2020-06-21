@@ -23,8 +23,16 @@ function isAllowed (const accountFrom : address ; const value : nat ; var s : co
     var allowed: bool := False;
     if sender =/= accountFrom then block {
       // Checking if the sender is allowed to spend in name of accountFrom
-      const src: account = get_force(accountFrom, s.ledger);
-      const allowanceAmount: nat = get_force(sender, src.allowances);
+      const src: account = 
+      case s.ledger[accountFrom] of
+        Some(pattern) -> pattern
+      | None -> (failwith ("No account") : account)
+      end;
+      const allowanceAmount: nat = 
+      case src.allowances[sender] of 
+        Some(pattern) -> pattern
+      | None -> (failwith ("No allowances") : nat)
+      end;
       allowed := allowanceAmount >= value;
     };
     else allowed := True;
@@ -40,8 +48,6 @@ function isAllowed (const accountFrom : address ; const value : nat ; var s : co
 function transfer (const accountFrom : address ; const destination : address ; const value : nat ; var s : contract_storage) : contract_storage is
  begin  
   // If accountFrom = destination transfer is not necessary
-  if accountFrom =/= Tezos.sender then failwith ("At the moment, only transfer token amount in your own account")
-  else block {
   if accountFrom = destination then skip;
   else block {
     // Is sender allowed to spend value in the name of accountFrom
@@ -51,7 +57,11 @@ function transfer (const accountFrom : address ; const destination : address ; c
     end;
 
     // Fetch src account
-    const src: account = get_force(accountFrom, s.ledger);
+    const src: account =
+    case s.ledger[accountFrom] of
+      Some(pattern) -> pattern
+    | None -> (failwith ("Account is not included") : account)
+    end;
 
     // Check that the accountFrom can spend that much
     if value > src.balance 
@@ -85,7 +95,6 @@ function transfer (const accountFrom : address ; const destination : address ; c
 
     s.ledger[accountFrom] := src;
     s.ledger[destination] := dst;
-  }
   }
  end with s
 
@@ -159,7 +168,12 @@ function approve (const spender : address ; const value : nat ; var s : contract
   // If sender is the spender approving is not necessary
   if sender = spender then skip;
   else block {
-    const src: account = get_force(sender, s.ledger);
+    const src: account = 
+    case s.ledger[sender] of 
+      Some(pattern) -> pattern
+    | None -> (failwith("Account is not included") : account)
+    end;
+
     src.allowances[spender] := value;
     s.ledger[sender] := src; // Not sure if this last step is necessary
   }
@@ -172,8 +186,16 @@ function approve (const spender : address ; const value : nat ; var s : contract
 //  The state is unchanged
 function getAllowance (const owner : address ; const spender : address ; const contr : contract(nat) ; var s : contract_storage) : list(operation) is
  begin
-  const src: account = get_force(owner, s.ledger);
-  const destAllowance: nat = get_force(spender, src.allowances);
+  const src: account = 
+  case s.ledger[owner] of
+    Some(pattern) -> pattern
+  | None -> (failwith("owner is not included") : account)
+  end;
+  const destAllowance: nat = 
+  case src.allowances[spender] of
+    Some(pattern) -> pattern
+  | None -> (failwith("spender is not included in allownaces map") : nat)
+  end;
  end with list [transaction(destAllowance, 0tz, contr)]
 
 // View function that forwards the balance of source to a contract
@@ -183,7 +205,11 @@ function getAllowance (const owner : address ; const spender : address ; const c
 //  The state is unchanged
 function getBalance (const accountFrom : address ; const contr : contract(nat) ; var s : contract_storage) : list(operation) is
  begin
-  const src: account = get_force(accountFrom, s.ledger);
+  const src: account = 
+  case s.ledger[accountFrom] of 
+    Some(pattern) -> pattern
+  | None -> (failwith("Account is not included") : account)
+  end;
  end with list [transaction(src.balance, 0tz, contr)]
 
 // View function that forwards the totalSupply to a contract
