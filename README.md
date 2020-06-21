@@ -1,4 +1,4 @@
-# Purpose of the app
+# Purpose of The Dapp
 
 The dapp aims to issue short-term debt on chain with each token pegged to 10^-6 dollar and treat the xtz as the media for value exchange between usd and the debt token.
 
