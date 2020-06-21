@@ -33,7 +33,9 @@ const Menu = ({
       const parsed_date = moment(start_date_timestamp * 1000).utcOffset('+00').format('YYYY-MM-DDThh:mm:ssZ').toString()
       const parsed_data = parsed_date.replace("+00:00","Z")
       const paybackAmount = Math.round(creditCapital * ( 1 + interestRate / 1000000) ** day_diff - creditCapital)
-      alert(paybackAmount)
+      const str_payback = "Payback Amount: "
+      const str_combo = str_payback.concat(paybackAmount)
+      alert(str_combo)
       const op = await ledgerInstance.methods
         .modifyOwnership(new_owner, parsed_data, paybackAmount)
         .send({ amount: 3000000, mutez: true });

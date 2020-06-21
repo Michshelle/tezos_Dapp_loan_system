@@ -59,8 +59,13 @@ const App = () => {
   const mint = async (mintNumber,xtz) => {
     // sends mint request
     const price = mintNumber / 1000000 / xtz;
-    alert("mint: ", mintNumber, " tokens")
-    alert("collateralized tezos ", price.toFixed(4))
+    const str_mint = "mint: "
+    const str_tokens = " tokens"
+    const str_combo = str_mint.concat(mintNumber, str_tokens)
+    alert(str_combo)
+    const str_tezos = "collateralized tezos: "
+    const str_combo1 = str_tezos.concat(price.toFixed(4))
+    alert(str_combo1)
     const op = await tokenInstance.methods.mint(mintNumber).send({ amount: price.toFixed(4) });
     // waits for confirmation
     await op.confirmation(30);
