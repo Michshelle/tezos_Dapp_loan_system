@@ -85,7 +85,7 @@ const Menu = ({
   return (
     <>
         <div className="app-subtitle">Choose the action you want to perform:</div>
-          <p>USD{ ledgerInfo[1] /10000 } has been raised for the debt account { shortenAddress(ledgerInfo[0]) }.</p>
+          <p>USD{ ledgerInfo[1] /1000000 } has been raised for the debt account { shortenAddress(ledgerInfo[0]) }.</p>
             <div className="card coffee_selection" key={userAddress}>
               <div className="card-footer">
                 <div className="card-footer-item">
