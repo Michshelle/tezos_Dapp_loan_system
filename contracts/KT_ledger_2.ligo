@@ -5,14 +5,11 @@ type counter is record
     is_final : bool;
     paybackAmount : nat;
 end
-
 type mapforapproval is record
     creditor : address;
     payamount : nat;
 end
-
 type register is map (address, counter);
-
 type contract_storage is record
   debtor : address;
   totalCredit : int;
@@ -20,7 +17,6 @@ type contract_storage is record
   couponRate_inPerc: nat; //negative interest rate is not considered;
   creditorsMap : register;
 end
-
 type action is
 | ModifyCapital of (int)
 | AddCreditor of (address * nat * int * nat)
@@ -34,7 +30,6 @@ const ownerAddress : address =
   ("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address);
 const exectAddress : address =
   ("KT1K9UbyNBtjBaoz5vERevagiCXG6qgtaRRy" : address);
-
 type parameter is
 | Transfer of (address * address * nat)
 
