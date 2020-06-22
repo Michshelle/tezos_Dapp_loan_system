@@ -35,6 +35,9 @@ After we have the two contracts on chain, the deployment part is done;
 # Backend Deployment
 
 `checkPoint` in KT_ledger would be set to run for every 15 minutes to make sure expired record would be removed in time and the token would be released.
+
+If you try to use the existing example currently on tezos.michshell.net, you can check up the faucet.json, That is the wallet of the owner of the debtor's (AKA. alice).
+
 ```
 15 * * * * /Home/tezos/tezos-client transfer 0 from alice to KT19kz19131X3D38js91b1pxJWqhmApyFnv5 --entrypoint checkPoint --burn-cap 1 >/var/log/tezos_update.log 2>&1
 ```
