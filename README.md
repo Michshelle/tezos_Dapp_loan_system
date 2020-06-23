@@ -57,6 +57,7 @@ Spare the coarse design of the webpage as I know too little about frontend, espe
 
 1. Lots of errors and warnings under the hood cannot be addressed enough. If you are trying to run the app yourself, please open the browser dev console to make sure the process.
 2. CORS policy needs to be overriden when making localhost test, here I would recommend chrome extension adds-on for temporary bypass. An alternative is to use a proxy to fetch value.  Server side currently applies this method.
+3. The safety of the contracts should be reinforced. Some of the entrypoint caller should be restricted to the debt owner or the contract owner only.  The QC rules are not rigorous enough.
 
 
 # Project Reference
