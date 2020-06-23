@@ -51,12 +51,12 @@ Three functions have been built and put on the frontend for showcase.
 
 "Debt ownership transfer" and "debt token withdrawal" have been released to the public users as `transfer` and `burn` buttons;  "Token mint function" can be used when the token owner account is being connected to the tezbridge.
 
-Spare the coarse design of the webpage as I know too little about frontend especially javescript and react.  Basically I'm mimicing the code mentioned in the reference section.
+Spare the coarse design of the webpage as I know too little about frontend, especially javescript and react.  Basically I'm mimicing the code mentioned in the reference section.
 
 # Limitations on the built part
 
 1. Lots of errors and warnings under the hood cannot be addressed enough. If you are trying to run the app yourself, please open the browser dev console to make sure the process.
-2. CORS policy needs to be overriden when making localhost test, here I would recommend chrome extension adds-on for temporary bypass. An alternative is to use a proxy to fetch value.
+2. CORS policy needs to be overriden when making localhost test, here I would recommend chrome extension adds-on for temporary bypass. An alternative is to use a proxy to fetch value.  Server side currently applies this method.
 
 
 # Project Reference
