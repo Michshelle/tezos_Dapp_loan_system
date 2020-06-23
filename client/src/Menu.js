@@ -63,7 +63,7 @@ const Menu = ({
       if (typeof balanceToken === "undefined") { 
         throw Error("Cannot find the account possesses any debt token. ");
       }
-      const req = await fetch("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD", { headers : { 'Access-Control-Allow-Origin': '*' }})
+      const req = await fetch("https://cors-anywhere.herokuapp.com/https://api-pub.bitfinex.com/v2/ticker/tXTZUSD", { headers : { 'Access-Control-Allow-Origin': '*' }})
       const response = await req.json()    
       const xtzPrice = Number(response[0])
       const amounts = Math.round(balanceToken / xtzPrice)  //in mutez

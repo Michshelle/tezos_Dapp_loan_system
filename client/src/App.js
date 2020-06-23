@@ -29,7 +29,7 @@ const App = () => {
 
   const tezosPrice = async() => {
     try {
-      const req = await fetch("https://api-pub.bitfinex.com/v2/ticker/tXTZUSD", { headers : { 'Access-Control-Allow-Origin': '*' }})
+      const req = await fetch("https://cors-anywhere.herokuapp.com/https://api-pub.bitfinex.com/v2/ticker/tXTZUSD")
       const response = await req.json()               
       const _xtz = Number(response[0])
       setXtzPrice(_xtz);
