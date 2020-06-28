@@ -68,26 +68,23 @@ function transfer ( var s : contract_storage; const inaccount : mapforapproval) 
 
 function mint (const value : nat ; var s : contract_storage) : contract_storage is
  begin
-  const tezAmount : tez = 1000000n * amount;
-  const comp : nat = tezAmount / 1tez;
-  const diff_wrong : bool = (comp < value);
-  if diff_wrong = True then failwith ("Cannot mint, not enough collateral.");
+  //const tezAmount : tez = 1000000n * amount;
+  //const comp : nat = tezAmount / 1tez;
+  //const diff_wrong : bool = (comp < value);
+  if Tezos.sender =/= s.owner then failwith("You must be the owner of the contract to mint tokens");
   else block {
-    if Tezos.sender =/= s.owner then failwith("You must be the owner of the contract to mint tokens");
-    else block {
-      var ownerAccount: account := record 
-          balance = 0n;
-          allowances = (map end : map(address, nat));
-      end;
-      case s.ledger[s.owner] of
-      | None -> skip
-      | Some(n) -> ownerAccount := n
-      end;
-      // Update the owner balance
-      ownerAccount.balance := ownerAccount.balance + value;
-      s.ledger[s.owner] := ownerAccount;
-      s.totalSupply := s.totalSupply + value;
-    }
+    var ownerAccount: account := record 
+        balance = 0n;
+        allowances = (map end : map(address, nat));
+    end;
+    case s.ledger[s.owner] of
+    | None -> skip
+    | Some(n) -> ownerAccount := n
+    end;
+    // Update the owner balance
+    ownerAccount.balance := ownerAccount.balance + value;
+    s.ledger[s.owner] := ownerAccount;
+    s.totalSupply := s.totalSupply + value;
   }
  end with s
 
