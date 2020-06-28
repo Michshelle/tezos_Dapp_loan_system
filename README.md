@@ -9,30 +9,25 @@ To know more details, please take a look at the spec on Flexible Loan System.
 Tools: ide.ligolang.org + tezbridge + crontab
 
 A few steps of manual work are required.
-1. Deploy the token contract and copy the contract address when it is done
+1. Deploy the contract and copy the contract address when it is done
 
 Initialization Code on ligolang website, FYI
 ```
-record [
-         owner = ("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address);
-         totalSupply = 0n;
-         ledger = big_map [("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address) -> record [
-                            balance = 0n;
-                            allowances = (map [] : map (address , nat));
-                         ]];]
-```
-2. Paste the above address to the ledger contract and deploy it
 
-Initialization Code on ligolang website, FYI
-```
-record [ debtor = ("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address); 
-         totalCredit = 0; 
-         capitalAmount = 1000; 
+record [ owner = ("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address); 
+         totalCredit = 0n; 
+         totalSupply = 0n; 
          couponRate_inPerc = 9n; 
-         creditorsMap = (map [] : map (address, counter)); ]
+         creditorsMap = (map [] : map (address, counter)); 
+         ledger = big_map [("tz1NBWgCxEGy8U6UA4hRmemt3YmMXbPPe1YH" : address) -> record [
+            balance = 0n;
+            allowances = (map [] : map (address , nat));
+        ]];
+ ]
 ```
+2. Use entrypoint `approve` to allow the initialized contract to transfer tokens to creditors in future.
 
-After we have the two contracts on chain, the deployment part is done;
+After step 1 & 2, the deployment part is done;
 
 # Backend Deployment
 
@@ -41,7 +36,7 @@ After we have the two contracts on chain, the deployment part is done;
 If you try to use the existing example currently on tezos.michshell.net, you can check up the faucet.json, That is the wallet of the owner of the debtor's (AKA. alice).
 
 ```
-15 * * * * /Home/tezos/tezos-client transfer 0 from alice to KT19kz19131X3D38js91b1pxJWqhmApyFnv5 --entrypoint checkPoint --burn-cap 1 >/var/log/tezos_update.log 2>&1
+15 * * * * /Home/tezos/tezos-client transfer 0 from alice to KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB --entrypoint checkPoint --burn-cap 1 >/var/log/tezos_update.log 2>&1
 ```
 # Webpage Usage
 
@@ -53,11 +48,12 @@ Three functions have been built and put on the frontend for showcase.
 
 Spare the coarse design of the webpage as I know too little about frontend, especially javescript and react.  Basically I'm mimicing the code mentioned in the reference section.
 
-# Limitations on the built part
+# Limitations on the built part 
 
 1. Lots of errors and warnings under the hood cannot be addressed enough. If you are trying to run the app yourself, please open the browser dev console to make sure the process.
 2. CORS policy needs to be overriden when making localhost test, here I would recommend chrome extension adds-on for temporary bypass. An alternative is to use a proxy to fetch value.  Server side currently applies this method.
 3. The safety of the contracts should be reinforced. Some of the entrypoint caller should be restricted to the debt owner or the contract owner only.  The QC rules are not rigorous enough.
+4. Insufficient amount of tezos would be collateralized corresponding to the amount of token, due to lack of QC rule.
 
 
 # Project Reference
@@ -74,20 +70,22 @@ Thanks to the folks on tezos.stackexchange.com and ligolang discorder, and to th
 
 ```
 #add creditor
-./tezos-client transfer 0 from alice to KT19kz19131X3D38js91b1pxJWqhmApyFnv5 --entrypoint addCreditor --arg '(Pair (Pair "tz1g4Kw2qhYELxeeHc2yiuLtPdovVckYNc6G" 50000000) (Pair 4 50001800))' --burn-cap 1
+./tezos-client transfer 0 from alice to KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB --entrypoint addCreditor --arg '(Pair (Pair "tz1g4Kw2qhYELxeeHc2yiuLtPdovVckYNc6G" 50000000) (Pair 4 50001800))' --burn-cap 1
 
 #modifyOwnership
-./tezos-client transfer 3 from david to KT19kz19131X3D38js91b1pxJWqhmApyFnv5 --entrypoint modifyOwnership --arg '(Pair (Pair "tz1VmUWL8DxseZnPTdhHQkkuk6nK55NVdKCG" "2020-06-21T00:39:07Z") 106)' --burn-cap 1
+./tezos-client transfer 3 from david to KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB --entrypoint modifyOwnership --arg '(Pair (Pair "tz1VmUWL8DxseZnPTdhHQkkuk6nK55NVdKCG" "2020-06-21T00:39:07Z") 106)' --burn-cap 1
 
 #checkPoint
-./tezos-client transfer 0 from alice to KT19kz19131X3D38js91b1pxJWqhmApyFnv5 --entrypoint checkPoint --burn-cap 1
-
+./tezos-client transfer 0 from alice to KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB --entrypoint checkPoint --burn-cap 1
 
 
 #mint
-./tezos-client transfer 100 from alice to KT1J392py8u2xKVC2dkeJ6T4yVZdG3UXXGMe --entrypoint mint --arg 100000000 --burn-cap 1
+./tezos-client transfer 100 from alice to KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB --entrypoint mint --arg 100000000 --burn-cap 1
 
 #approve
-./tezos-client transfer 0 from alice to KT1J392py8u2xKVC2dkeJ6T4yVZdG3UXXGMe --entrypoint approve --arg '(Pair "KT19kz19131X3D38js91b1pxJWqhmApyFnv5" 200000)' --burn-cap 1
+./tezos-client transfer 0 from alice to KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB --entrypoint approve --arg '(Pair " KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB" 200000)' --burn-cap 1
+
+#burn
+./tezos-client transfer 0 from AHS_admin to KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB --entrypoint burn --arg '(Pair (Pair "XTZ" 166000000) 0)' --burn-cap 1
 
 ```
