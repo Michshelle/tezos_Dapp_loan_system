@@ -5,19 +5,14 @@ import Menu from "./Menu";
 import "./App.css";
 import "./bulma.css";
 
-
-
-
 /* PUT HERE THE CONTRACT ADDRESS FOR YOUR OWN SANDBOX! */
-const KT_ledger = "KT19kz19131X3D38js91b1pxJWqhmApyFnv5"  //some of the QC rules have been removed;
-const KT_token = "KT1J392py8u2xKVC2dkeJ6T4yVZdG3UXXGMe"
+const KT_ledger = "KT1RWt6Qg94nu9EsiiFrXkd8JrqQ4j2FrCxB"  //some of the QC rules have been removed;
 
 
 const shortenAddress = addr =>
   addr.slice(0, 6) + "..." + addr.slice(addr.length - 6);
 
 const App = () => {
-  const [tokenInstance, setTokenInstance] = useState(undefined);
   const [xtzPrice, setXtzPrice] = useState(undefined);
   const [ledgerInstance, setLedgerInstance] = useState(undefined);
   const [ledgerInfo, setLedgerInfo] = useState(undefined);
@@ -31,7 +26,7 @@ const App = () => {
     try {
       const req = await fetch("https://cors-anywhere.herokuapp.com/https://api-pub.bitfinex.com/v2/ticker/tXTZUSD")
       const response = await req.json()               
-      const _xtz = Number(response[0])
+      const _xtz = Number(response[0]) * 0.99
       setXtzPrice(_xtz);
     } catch (error) {
       console.log("error fetching xtz price:", error);
@@ -45,11 +40,9 @@ const App = () => {
       // gets user's balance
       const _balance = await Tezos.tz.getBalance(_address);
       setBalance(_balance);
-      const storage = await tokenInstance.storage();
+      const storage = await ledgerInstance.storage();
       if (storage.owner === _address) {
         setIsOwner(true);
-      //  const _contractBalance = await Tezos.tz.getBalance(KT_token);
-      //  setContractBalance(_contractBalance.c[0]);
       }
     } catch (error) {
       console.log("error fetching the address or balance:", error);
@@ -66,7 +59,7 @@ const App = () => {
     const str_tezos = "collateralized tezos: "
     const str_combo1 = str_tezos.concat(price.toFixed(4))
     alert(str_combo1)
-    const op = await tokenInstance.methods.mint(mintNumber).send({ amount: price.toFixed(4) });
+    const op = await ledgerInstance.methods.mint(mintNumber).send({ amount: price.toFixed(4) * 1.02 });
     // waits for confirmation
     await op.confirmation(30);
     // if confirmed
@@ -86,13 +79,10 @@ const App = () => {
         rpc: "https://tezos-dev.cryptonomic-infra.tech",
         signer: new TezBridgeSigner()
       });
-      const tokenContract = await Tezos.contract.at(KT_token);
-      setTokenInstance(tokenContract);
       const ledgerContract = await Tezos.contract.at(KT_ledger);
       setLedgerInstance(ledgerContract);
       const ledgerStorage = await ledgerContract.storage();
-      // creates token contract info
-      let ledgerInfos = [ledgerStorage.debtor,ledgerStorage.totalCredit];
+      let ledgerInfos = [ledgerStorage.owner,ledgerStorage.totalCredit];
       setLedgerInfo(ledgerInfos);
     })();
   }, []);
@@ -154,7 +144,6 @@ const App = () => {
       ) : (
         <Menu
           ledgerInfo={ledgerInfo}
-          tokenInstance={tokenInstance}
           ledgerInstance={ledgerInstance}
           userAddress={userAddress}
           setBalance={setBalance}

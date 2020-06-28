@@ -10,7 +10,6 @@ const shortenAddress = addr =>
 //  Math.round((parseInt(mutez) / 1000000 + Number.EPSILON) * 100) / 100;
 
 const Menu = ({
-  tokenInstance,
   ledgerInstance,
   ledgerInfo,
   userAddress,
@@ -34,7 +33,7 @@ const Menu = ({
       const parsed_data = parsed_date.replace("+00:00","Z")
       const paybackAmount = Math.round(creditCapital * ( 1 + interestRate / 1000000) ** day_diff - creditCapital)
       const str_payback = "Payback Amount: "
-      const str_combo = str_payback.concat(paybackAmount)
+      const str_combo = str_payback.concat(paybackAmount, " ",parsed_data, new_owner)
       alert(str_combo)
       const op = await ledgerInstance.methods
         .modifyOwnership(new_owner, parsed_data, paybackAmount)
@@ -54,11 +53,11 @@ const Menu = ({
 
   const burn = async () => {
     try {
-      const tokenStorage = await tokenInstance.storage()
-      if (userAddress === tokenStorage.owner) { 
+      const ledgerStorage = await ledgerInstance.storage()
+      if (userAddress === ledgerStorage.owner) { 
         throw Error("The burn on webpage is only designed for creditors! Use commandline to burn as the token owner! ");
       }
-      const userToken = await tokenStorage.ledger.get(userAddress)
+      const userToken = await ledgerStorage.ledger.get(userAddress)
       const balanceToken = userToken.balance
       if (typeof balanceToken === "undefined") { 
         throw Error("Cannot find the account possesses any debt token. ");
@@ -68,7 +67,7 @@ const Menu = ({
       const xtzPrice = Number(response[0])
       const amounts = Math.round(balanceToken / xtzPrice)  //in mutez
       const settlement = "XTZ"  //this can be an option in future at the frontend.  The settlement can be in USD and etc.
-      const op = await tokenInstance.methods.burn(settlement, amounts, 0).send({ amount: 0 });
+      const op = await ledgerInstance.methods.burn(settlement, amounts, 0).send({ amount: 0 });
       await op.confirmation(30);
       if (op.includedInBlock !== Infinity) {
         const newBalance = await Tezos.tz.getBalance(userAddress);
